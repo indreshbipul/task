@@ -10,7 +10,7 @@ function List(){
                     <tr>
                         <th className="px-4 py-2 border">Name</th>
                         <th className="px-4 py-2 border">Position</th>
-                        <th className="px-4 py-2 border">Office</th>
+                        <th className="px-4 py-2 border">City</th>
                         <th className="px-4 py-2 border">Extension</th>
                         <th className="px-4 py-2 border">Start Date</th>
                         <th className="px-4 py-2 border">Salary</th>
