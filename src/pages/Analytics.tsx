@@ -35,10 +35,12 @@ function Analytics() {
     const barWidth = 50;
     const maxBarHeight = 250;
     const chartWidth = Math.max(cities.length * 90, 600);
+    const imageUrl = localStorage.getItem("imageUrl") || {}
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col items-center py-12 px-4 gap-8">
             <h1 className="text-3xl font-bold text-gray-800 tracking-tight">Analytics</h1>
             {/* Chart Card */}
+            <img src={imageUrl} alt="image" />
             <div className="w-full max-w-5xl bg-white p-6 rounded-2xl shadow-sm border border-gray-100 overflow-x-auto">
                 <svg 
                     width={chartWidth} 

@@ -1,20 +1,17 @@
 import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function AuditCapture({ onSave }) {
+export default function AuditCapture() {
+    const navigate = useNavigate()
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
-    
-    // We track where the user is in the process: "start" -> "camera" -> "captured"
     const [step, setStep] = useState("start"); 
-
-    // A simple dictionary to keep our UI text organized and out of the JSX below
     const stepContent = {
         start: { title: "Audit Verification", subtitle: "We need to capture your image." },
         camera: { title: "Take a Photo", subtitle: "Ensure your face is clearly visible." },
         captured: { title: "Sign Your Name", subtitle: "Draw your signature directly over the image." }
     };
 
-    // 1. Let's ask the user for permission to turn on their webcam
     const startCamera = async () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
@@ -26,7 +23,6 @@ export default function AuditCapture({ onSave }) {
         }
     };
 
-    // 2. Snap the photo and shut down the camera to save battery/privacy
     const capturePhoto = () => {
         const canvas = canvasRef.current;
         const video = videoRef.current;
@@ -46,13 +42,13 @@ export default function AuditCapture({ onSave }) {
         setStep("captured");
     };
 
-    // 3. Handle the signature drawing (works for both mouse and touch screens)
+    // 3. Handle the signature drawing 
     const handleDrawing = (event) => {
-        // Only allow drawing if we are on the final step, and ensure the left mouse button is held down
+        // Only allow drawing if we are on the final step
         if (step !== "captured") return;
         if (event.type.includes("mouse") && event.buttons !== 1) return;
-        
-        event.preventDefault(); // Stop mobile browsers from scrolling while the user is trying to sign
+
+        event.preventDefault(); 
 
         const canvas = canvasRef.current;
         const context = canvas.getContext("2d");
@@ -62,7 +58,6 @@ export default function AuditCapture({ onSave }) {
         const clientX = event.touches ? event.touches[0].clientX : event.clientX;
         const clientY = event.touches ? event.touches[0].clientY : event.clientY;
 
-        // Because CSS (w-full) resizes the canvas, we need to scale the coordinates 
         // to match the actual internal pixel size of the image.
         const scaleX = canvas.width / rect.width;
         const scaleY = canvas.height / rect.height;
@@ -87,10 +82,9 @@ export default function AuditCapture({ onSave }) {
 
     // 4. Package up the final image and send it to the parent component
     const handleSave = () => {
-        canvasRef.current.toBlob((blob) => {
-            const imageUrl = URL.createObjectURL(blob);
-            onSave(imageUrl);
-        }, "image/png");
+        const base64Image = canvasRef.current.toDataURL("image/png");
+        localStorage.setItem("imageUrl", base64Image);
+        navigate('/analytics')
     };
 
     return (
@@ -127,7 +121,7 @@ export default function AuditCapture({ onSave }) {
                         onClick={capturePhoto} 
                         className="px-6 py-2.5 bg-white text-gray-900 font-bold rounded-full shadow-lg hover:scale-105 transition-transform"
                     >
-                        📸 Capture
+                         Capture
                     </button>
                 </div>
             </div>
