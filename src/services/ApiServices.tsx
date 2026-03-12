@@ -17,5 +17,22 @@ const login = async(payload : object)=>{
     }
 }
 
-const ApiServices = {login};
+const getCordinates = async(payload :string)=>{
+    const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${payload}&key=cc4d3ff277a346c3af7fb78ade6b24f3`,{
+        method : "GET",
+        headers  : {
+
+        },
+    })
+    const res = await response.json();
+    if(res.length === 0){
+        return null
+    }
+    return {
+        lat: Number(res.results[0].geometry.lat),
+        lon: Number(res.results[0].geometry.lng)
+    };
+}
+
+const ApiServices = {login, getCordinates};
 export default ApiServices;
