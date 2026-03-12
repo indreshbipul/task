@@ -7,10 +7,15 @@ export function UserProvider({children}){
     const username = localStorage.getItem("username");
     const password = localStorage.getItem("password");
     const [error, setError] = useState<String | null>("");
+    const [loading, setLoading] = useState(true)
     let payload;
     if(username || password){
         payload = {username, password}
     }
+    if(!payload){
+        setLoading(false)
+        return
+     }
     useEffect(()=>{
         ApiServices.login(payload)
         .then(({res,status})=>{
@@ -24,13 +29,15 @@ export function UserProvider({children}){
             }
             setError("") 
             setUserData(res.TABLE_DATA.data);
+            setLoading(false);
         })
         .catch(()=>{
             setError("APi Server of Jotish is Not Working");
+            setLoading(false);
         })
     },[])
     const [userData, setUserData] = useState<Object | null>();
     return(
-        <userContext.Provider value={{userData, setUserData}}>{children}</userContext.Provider>
+        <userContext.Provider value={{userData, setUserData, loading}}>{children}</userContext.Provider>
     )
 }
