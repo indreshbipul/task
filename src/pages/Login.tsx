@@ -4,8 +4,8 @@ import useUserContext from "../hooks/useUserContext";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-    const [username, setUsername] = useState<String | null>("");
-    const [password, setPassword] = useState<String | null>("");
+    const [username, setUsername] = useState<string | null>("");
+    const [password, setPassword] = useState<string | null>("");
     const [error, setError] = useState<String | null>("");
     const {setUserData} = useUserContext<object | null>({})
     const navigate = useNavigate()
@@ -14,6 +14,8 @@ function Login() {
             setError("Invalid Request");
             return;
         }
+        localStorage.setItem("username", username);
+        localStorage.setItem("password", password)
         const payload = {
             username,password
         }
