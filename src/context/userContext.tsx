@@ -12,11 +12,12 @@ export function UserProvider({children}){
     if(username || password){
         payload = {username, password}
     }
-    if(!payload){
-        setLoading(false)
-        return
-     }
+    
     useEffect(()=>{
+        if(!payload){
+            setLoading(false)
+            return
+         }
         ApiServices.login(payload)
         .then(({res,status})=>{
             if(status === 400){
